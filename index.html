@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Concept Soulutions - Affordable Luxury</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #1e1e2f 0%, #2a2a4a 25%, #00d4ff 50%, #ff007a 75%, #1e1e2f 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            min-height: 100vh;
+            color: #212121;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating Navigation */
+        .navbar {
+            position: fixed;
+            top: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 2rem;
+            padding: 0.5rem 1rem;
+            z-index: 1000;
+            animation: float 6s ease-in-out infinite;
+            box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 40rem;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-0.5rem); }
+        }
+
+        .navbar ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .navbar a {
+            color: #212121;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 1.5rem;
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
+        }
+
+        .navbar a:hover {
+            color: #424242;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .logo {
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            background: linear-gradient(45deg, #FBC02D, #212121);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
+
+        /* More Dropdown */
+        .more-menu {
+            position: relative;
+        }
+
+        .more-button {
+            color: #212121;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 1.5rem;
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
+            cursor: pointer;
+        }
+
+        .more-button:hover {
+            color: #424242;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: auto;
+            right: 0;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 1rem;
+            padding: 0.5rem;
+            z-index: 1000;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
+            min-width: 8rem;
+        }
+
+        .dropdown.active {
+            display: block;
+        }
+
+        .dropdown a {
+            display: block;
+            color: #212121;
+            padding: 0.5rem 1rem;
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+        }
+
+        .dropdown a:hover {
+            color: #424242;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Main Content Container */
+        .container {
+            max-width: 75rem;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Glass Card Effect */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1.25rem;
+            padding: clamp(1rem, 4vw, 2rem);
+            margin: 1rem 0;
+            animation: slideUp 0.8s ease-out;
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-0.5rem);
+            box-shadow: 0 1.25rem 2.5rem rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(3rem); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Page Sections */
+        .page {
+            display: none;
+            min-height: 100vh;
+            padding-top: clamp(5rem, 15vw, 7rem);
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            color: #212121;
+            position: relative;
+            height: clamp(60vh, 80vw, 80vh);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+            filter: brightness(0.5);
+            z-index: -1;
+        }
+
+        .hero h1 {
+            font-size: clamp(2rem, 8vw, 3.5rem);
+            margin-bottom: 1rem;
+            color: #FBC02D;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 1rem rgba(251, 192, 45, 0.5); }
+            to { text-shadow: 0 0 1.5rem rgba(251, 192, 45, 0.8), 0 0 2rem rgba(33, 33, 33, 0.6); }
+        }
+
+        .hero p {
+            font-size: clamp(1rem, 3vw, 1.3rem);
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(45deg, #FBC02D, #212121);
+            color: #212121;
+            padding: clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 4vw, 2.5rem);
+            border-radius: 3rem;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0.6rem 1.5rem rgba(0, 0, 0, 0.3);
+            color: #424242;
+        }
+
+        /* 3D Tour Cards */
+        .tour-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1.25rem;
+            padding: clamp(1rem, 3vw, 1.5rem);
+            margin: 1rem 0;
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+        }
+
+        .tour-card:hover {
+            transform: rotateY(5deg) rotateX(5deg) translateZ(1rem);
+            box-shadow: 0 1.25rem 2.5rem rgba(0, 0, 0, 0.3);
+        }
+
+        .tour-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(clamp(15rem, 40vw, 18rem), 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        /* Social Media Icons */
+        .social-icons {
+            display: flex;
+            gap: clamp(0.8rem, 2vw, 1rem);
+            justify-content: center;
+            margin: 1.5rem 0;
+            flex-wrap: wrap;
+        }
+
+        .social-icon {
+            width: clamp(2rem, 5vw, 2.5rem);
+            height: clamp(2rem, 5vw, 2.5rem);
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #212121;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+        }
+
+        .social-icon:hover {
+            transform: translateY(-0.3rem) scale(1.1);
+            color: #424242;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Newsletter */
+        .newsletter {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 1.25rem;
+            padding: clamp(1rem, 4vw, 2rem);
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .newsletter h2 {
+            color: #FBC02D;
+            margin-bottom: clamp(0.8rem, 2vw, 1rem);
+        }
+
+        .newsletter p {
+            margin-bottom: clamp(1rem, 3vw, 1.5rem);
+        }
+
+        .newsletter input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 3rem;
+            padding: clamp(0.7rem, 2vw, 0.9rem) clamp(1rem, 3vw, 1.5rem);
+            margin: 0.5rem;
+            color: #212121;
+            width: 100%;
+            max-width: clamp(15rem, 80vw, 18rem);
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
+        }
+
+        .newsletter input::placeholder {
+            color: #424242;
+        }
+
+        .newsletter button {
+            background: linear-gradient(45deg, #FBC02D, #212121);
+            border: none;
+            border-radius: 3rem;
+            padding: clamp(0.7rem, 2vw, 0.9rem) clamp(1rem, 3vw, 1.5rem);
+            color: #212121;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
+        }
+
+        .newsletter button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0.6rem 1.2rem rgba(0, 0, 0, 0.3);
+            color: #424242;
+        }
+
+        /* Contact Form */
+        .contact-form {
+            display: grid;
+            gap: 1rem;
+            max-width: clamp(20rem, 90vw, 35rem);
+            margin: 0 auto;
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 0.9rem;
+            padding: clamp(0.7rem, 2vw, 0.9rem);
+            color: #212121;
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
+        }
+
+        .contact-form input::placeholder,
+        .contact-form textarea::placeholder {
+            color: #424242;
+        }
+
+        .contact-form button {
+            background: linear-gradient(45deg, #FBC02D, #212121);
+            color: #212121;
+            justify-self: center;
+            margin-top: 1rem;
+        }
+
+        .contact-form button:hover {
+            color: #424242;
+        }
+
+        /* Footer */
+        .footer {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            padding: clamp(1rem, 3vw, 1.5rem);
+            text-align: center;
+            color: #212121;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 2rem;
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+        }
+
+        /* 3D Canvas */
+        #bgCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            opacity: 0.3;
+        }
+
+        /* Particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(251, 192, 45, 0.3);
+            border-radius: 50%;
+            animation: particle-float 10s infinite linear;
+        }
+
+        @keyframes particle-float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+
+        /* Text Alignment */
+        .text-center {
+            text-align: center;
+        }
+
+        /* Responsive Design */
+        @media (min-width: 769px) {
+            .more-menu { display: none; }
+        }
+
+        @media (max-width: 1024px) {
+            .navbar { width: 95%; padding: 0.5rem; }
+            .navbar ul { gap: 0.8rem; }
+            .navbar a { padding: 0.4rem 0.8rem; }
+            .hero { height: 70vh; }
+            .hero h1 { font-size: clamp(1.8rem, 7vw, 3rem); }
+            .hero p { font-size: clamp(0.9rem, 2.5vw, 1.1rem); }
+            .tour-grid { grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); }
+            .glass-card { padding: clamp(0.8rem, 3vw, 1.5rem); }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0.5rem;
+                border-radius: 1.2rem;
+                width: 95%;
+            }
+            .navbar ul {
+                flex-direction: row;
+                gap: 0.5rem;
+                justify-content: space-between;
+            }
+            .navbar a, .more-button {
+                font-size: clamp(0.8rem, 2.2vw, 0.9rem);
+                padding: 0.4rem 0.8rem;
+            }
+            .desktop-nav { display: none; }
+            .more-menu { display: block; }
+            .dropdown {
+                right: 0;
+                min-width: 8rem;
+            }
+            .hero { height: 60vh; }
+            .hero h1 { font-size: clamp(1.5rem, 6vw, 2.5rem); }
+            .hero p { font-size: clamp(0.8rem, 2.2vw, 1rem); }
+            .tour-grid { grid-template-columns: 1fr; }
+            .cta-button { padding: clamp(0.6rem, 1.8vw, 0.8rem) clamp(1.2rem, 3vw, 1.8rem); }
+            .newsletter input, .newsletter button { width: 100%; max-width: 100%; }
+            .social-icon { width: clamp(1.8rem, 4vw, 2rem); height: clamp(1.8rem, 4vw, 2rem); }
+        }
+
+        @media (max-width: 480px) {
+            .navbar { top: 0.5rem; }
+            .navbar a, .more-button { font-size: clamp(0.7rem, 2vw, 0.8rem); padding: 0.3rem 0.6rem; }
+            .dropdown { min-width: 7rem; }
+            .dropdown a { font-size: clamp(0.7rem, 1.8vw, 0.8rem); }
+            .hero { height: 50vh; }
+            .hero h1 { font-size: clamp(1.2rem, 5vw, 2rem); }
+            .hero p { font-size: clamp(0.7rem, 2vw, 0.9rem); }
+            .glass-card { margin: 0.5rem 0; }
+            .tour-card { padding: clamp(0.8rem, 2.5vw, 1rem); }
+            .contact-form { max-width: 95%; }
+            .footer { padding: clamp(0.8rem, 2vw, 1rem); }
+        }
+
+        /* Ripple Effect for Buttons */
+        .ripple {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    <canvas id="bgCanvas"></canvas>
+
+    <!-- Floating Navigation -->
+    <nav class="navbar">
+        <ul>
+            <li><a href="#" class="logo">Concept Soulutions</a></li>
+            <li><a href="#" onclick="showPage('home')">Home</a></li>
+            <li class="desktop-nav"><a href="#" onclick="showPage('about')">About</a></li>
+            <li class="desktop-nav"><a href="#" onclick="showPage('contact')">Contact</a></li>
+            <li class="more-menu">
+                <a href="#" class="more-button" onclick="toggleDropdown()">More</a>
+                <div class="dropdown">
+                    <a href="#" onclick="showPage('about')">About</a>
+                    <a href="#" onclick="showPage('contact')">Contact</a>
+                </div>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Home Page -->
+    <div id="home" class="page active">
+        <div class="hero">
+            <div class="glass-card text-center">
+                <h1>Discover Dubai's Future</h1>
+                <p>Experience the city of dreams with affordable, unforgettable tours</p>
+                <a href="#" class="cta-button">Start Your Journey</a>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="glass-card">
+                <h2 style="text-align: center; margin-bottom: clamp(1rem, 3vw, 1.5rem); color: #FBC02D;">Why Choose Us?</h2>
+                <div class="tour-grid">
+                    <div class="tour-card">
+                        <h3 style="color: #FBC02D; margin-bottom: 0.9rem;">🏗️ Iconic Landmarks</h3>
+                        <p>Visit Burj Khalifa, Palm Jumeirah, and Dubai Marina with expert guides</p>
+                    </div>
+                    <div class="tour-card">
+                        <h3 style="color: #FBC02D; margin-bottom: 0.9rem;">🎭 Cultural Experiences</h3>
+                        <p>Explore traditional souks, museums, and authentic Emirati culture</p>
+                    </div>
+                    <div class="tour-card">
+                        <h3 style="color: #FBC02D; margin-bottom: 0.9rem;">🏜️ Desert Adventures</h3>
+                        <p>Thrilling desert safaris, camel rides, and traditional Bedouin experiences</p>
+                    </div>
+                    <div class="tour-card">
+                        <h3 style="color: #FBC02D; margin-bottom: 0.9rem;">💰 Affordable Luxury</h3>
+                        <p>Premium experiences at unbeatable prices - luxury doesn't have to be expensive</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card">
+                <h2 style="text-align: center; margin-bottom: clamp(1rem, 3vw, 1.5rem); color: #FBC02D;">Featured Tours</h2>
+                <div class="tour-grid">
+                    <div class="tour-card">
+                        <h3 style="color: #FBC02D;">City Explorer - $89</h3>
+                        <p style="margin: 0.9rem 0;">Full day city tour including Burj Khalifa, Dubai Mall, and Marina</p>
+                        <a href="#" class="cta-button" style="font-size: clamp(0.8rem, 2vw, 0.9rem); padding: clamp(0.6rem, 1.8vw, 0.8rem) clamp(1rem, 2.5vw, 1.5rem);">Book Now</a>
+                    </div>
+                    <div class="tour-card">
+                        <h3 style="color: #FBC02D;">Desert Safari - $75</h3>
+                        <p style="margin: 0.9rem 0;">Evening desert adventure with BBQ dinner and cultural show</p>
+                        <a href="#" class="cta-button" style="font-size: clamp(0.8rem, 2vw, 0.9rem); padding: clamp(0.6rem, 1.8vw, 0.8rem) clamp(1rem, 2.5vw, 1.5rem);">Book Now</a>
+                    </div>
+                    <div class="tour-card">
+                        <h3 style="color: #FBC02D;">Dubai Combo - $149</h3>
+                        <p style="margin: 0.9rem 0;">2-day package: City tour + Desert safari + Marina cruise</p>
+                        <a href="#" class="cta-button" style="font-size: clamp(0.8rem, 2vw, 0.9rem); padding: clamp(0.6rem, 1.8vw, 0.8rem) clamp(1rem, 2.5vw, 1.5rem);">Book Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Page -->
+    <div id="about" class="page">
+        <div class="container">
+            <div class="glass-card">
+                <h1 style="text-align: center; margin-bottom: clamp(1.5rem, 4vw, 2rem); color: #FBC02D;">About Concept Soulutions</h1>
+                <div style="line-height: 1.8; font-size: clamp(0.9rem, 2.5vw, 1.1rem);">
+                    <p style="margin-bottom: 1.5rem;">
+                        Founded in 2020, Concept Soulutions is dedicated to making luxury travel accessible. We believe in showcasing Dubai’s futuristic skyline, vibrant culture, and hidden gems at prices that suit every traveler.
+                    </p>
+                    <p style="margin-bottom: 1.5rem;">
+                        Our expert guides, passionate about their city, curate experiences that blend iconic landmarks with authentic adventures, ensuring unforgettable memories.
+                    </p>
+                </div>
+                <div class="tour-grid" style="margin-top: clamp(1.5rem, 4vw, 2rem);">
+                    <div class="tour-card">
+                        <h3 style="color: #FBC02D; margin-bottom: 0.9rem;">🌟 Our Promise</h3>
+                        <p>Premium experiences at budget-friendly prices with transparent pricing.</p>
+                    </div>
+                    <div class="tour-card">
+                        <h3 style="color: #FBC02D; margin-bottom: 0.9rem;">👥 Expert Guides</h3>
+                        <p>Local professionals who reveal Dubai’s iconic landmarks and hidden gems.</p>
+                    </div>
+                    <div class="tour-card">
+                        <h3 style="color: #FBC02D; margin-bottom: 0.9rem;">🚀 5000+ Happy Travelers</h3>
+                        <p>Join thousands who’ve experienced Dubai’s magic with us since 2020.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="newsletter">
+                <h2 style="margin-bottom: clamp(0.8rem, 2vw, 1rem); color: #FBC02D;">Stay Updated</h2>
+                <p style="margin-bottom: clamp(1rem, 3vw, 1.5rem);">Get exclusive deals and travel tips delivered to your inbox</p>
+                <div>
+                    <input type="email" placeholder="Enter your email address" id="newsletterEmail">
+                    <button onclick="subscribeNewsletter()">Subscribe</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Page -->
+    <div id="contact" class="page">
+        <div class="container">
+            <div class="glass-card">
+                <h1 style="text-align: center; margin-bottom: clamp(1.5rem, 4vw, 2rem); color: #FBC02D;">Get in Touch</h1>
+                <div class="contact-form">
+                    <input type="text" placeholder="Your Name" required>
+                    <input type="email" placeholder="Your Email" required>
+                    <input type="tel" placeholder="Phone Number">
+                    <textarea rows="5" placeholder="Tell us about your dream Dubai experience..."></textarea>
+                    <button class="cta-button" style="font-size: clamp(0.8rem, 2vw, 0.9rem); padding: clamp(0.6rem, 1.8vw, 0.8rem) clamp(1rem, 2.5vw, 1.5rem);" onclick="submitContact()">Send Message</button>
+                </div>
+            </div>
+
+            <div class="glass-card">
+                <h2 style="text-align: center; margin-bottom: clamp(1rem, 3vw, 1.5rem); color: #FBC02D;">Contact Information</h2>
+                <div class="tour-grid">
+                    <div class="tour-card">
+                        <h3 style="color: #FBC02D; margin-bottom: 0.9rem;">📍 Location</h3>
+                        <p>Dubai Marina, UAE<br>Office 1205, Marina Plaza</p>
+                    </div>
+                    <div class="tour-card">
+                        <h3 style="color: #FBC02D; margin-bottom: 0.9rem;">📞 Phone</h3>
+                        <p>+971 4 123 4567<br>Available 24/7</p>
+                    </div>
+                    <div class="tour-card">
+                        <h3 style="color: #FBC02D; margin-bottom: 0.9rem;">✉️ Email</h3>
+                        <p>info@conceptsoulutions.com<br>tours@conceptsoulutions.com</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card">
+                <h2 style="text-align: center; margin-bottom: clamp(1rem, 3vw, 1.5rem); color: #FBC02D;">Follow Us</h2>
+                <div class="social-icons">
+                    <a href="https://facebook.com" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://twitter.com" class="social-icon"><i class="fab fa-twitter"></i></a>
+                    <a href="https://instagram.com" class="social-icon"><i class="fab fa-instagram"></i></a>
+                    <a href="https://youtube.com" class="social-icon"><i class="fab fa-youtube"></i></a>
+                    <a href="https://linkedin.com" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+                <p style="text-align: center; margin-top: clamp(0.8rem, 2vw, 1rem);">
+                    Connect for daily Dubai inspiration and exclusive offers!
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2025 Concept Soulutions. All rights reserved.</p>
+        <div class="social-icons">
+            <a href="https://facebook.com" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://twitter.com" class="social-icon"><i class="fab fa-twitter"></i></a>
+            <a href="https://instagram.com" class="social-icon"><i class="fab fa-instagram"></i></a>
+            <a href="https://youtube.com" class="social-icon"><i class="fab fa-youtube"></i></a>
+            <a href="https://linkedin.com" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+    </footer>
+
+    <script>
+        // Three.js 3D Animation
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bgCanvas'), alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        const geometry = new THREE.TorusKnotGeometry(10, 3, 100, 16);
+        const material = new THREE.MeshBasicMaterial({ color: 0xFBC02D, wireframe: true });
+        const torusKnot = new THREE.Mesh(geometry, material);
+        scene.add(torusKnot);
+
+        camera.position.z = 30;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            torusKnot.rotation.x += 0.01;
+            torusKnot.rotation.y += 0.01;
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Responsive canvas resizing
+        window.addEventListener('resize', () => {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+        });
+
+        // Page Navigation
+        function showPage(pageId) {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => page.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            // Close dropdown after selecting a page (mobile only)
+            if (window.innerWidth <= 768) {
+                document.querySelector('.dropdown').classList.remove('active');
+            }
+        }
+
+        // Toggle Dropdown (mobile only)
+        function toggleDropdown() {
+            if (window.innerWidth <= 768) {
+                const dropdown = document.querySelector('.dropdown');
+                dropdown.classList.toggle('active');
+            }
+        }
+
+        // Close dropdown when clicking outside (mobile only)
+        document.addEventListener('click', function(event) {
+            if (window.innerWidth <= 768) {
+                const moreMenu = document.querySelector('.more-menu');
+                if (!moreMenu.contains(event.target)) {
+                    document.querySelector('.dropdown').classList.remove('active');
+                }
+            }
+        });
+
+        // Newsletter Subscription
+        function subscribeNewsletter() {
+            const email = document.getElementById('newsletterEmail').value;
+            if (email) {
+                alert('Thank you for subscribing! You\'ll receive exclusive Dubai travel deals soon.');
+                document.getElementById('newsletterEmail').value = '';
+            } else {
+                alert('Please enter a valid email address.');
+            }
+        }
+
+        // Contact Form Submission
+        function submitContact() {
+            alert('Thank you for your message! Our team will contact you within 24 hours to plan your perfect Dubai adventure.');
+        }
+
+        // Create floating particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = window.innerWidth < 768 ? 30 : 50;
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.width = Math.random() * 4 + 2 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.animationDelay = Math.random() * 10 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 5) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Initialize particles
+        window.addEventListener('load', createParticles);
+
+        // Scroll effects
+        document.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const cards = document.querySelectorAll('.glass-card');
+            cards.forEach((card, index) => {
+                const rate = scrolled * -0.5;
+                card.style.transform = `translateY(${rate * 0.1}px)`;
+            });
+        });
+
+        // Button ripple effect
+        document.querySelectorAll('.cta-button').forEach(button => {
+            button.addEventListener('click', function(e) {
+                const ripple = document.createElement('span');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                ripple.style.width = size + 'px';
+                ripple.style.height = size + 'px';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                ripple.classList.add('ripple');
+                this.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+    </script>
+</body>
+</html>
